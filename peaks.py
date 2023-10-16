@@ -33,31 +33,32 @@ def intervalize(time, signal, interval=0.1):
                 signal_new.append(0)
             time_new.append(round(base, 1))
         except:
-            print('done')
-            t = points + 100
+            break
+
     time_new.append(round(base + interval, 0))
     signal_new.append(0)
     return time_new, signal_new
 
 
 def dedupe(time, signal):
-    points = len(time)
-
+    """Don't send new instructions to the pi if we don't have to,
+    just leave the light on at the specified brightness."""
     time_new = []
     signal_new = []
-    for t in range(1, points):
+    for t in range(1, len(time)):
         if signal[t] > 25:
             time_new.append(time[t])
             signal_new.append(signal[t])
-
     return time_new, signal_new
 
 
-def write_peaks(fn, show_chart=False):
-    # reading the audio file
+def write_peaks(args):
+    """Open a .wav audio file, determine the waveform, and write a file
+    that supplies time and brightness level for the LEDs of the display."""
+
+    fn = args.filename
     raw = wave.open(fn)
 
-    # reads all the frames
     # -1 indicates all or max frames
     signal = raw.readframes(-1)
     signal = np.frombuffer(signal, dtype="int16")
@@ -68,7 +69,7 @@ def write_peaks(fn, show_chart=False):
     signal = 100 - signal
 
     # gets the frame rate
-    f_rate = raw.getframerate()
+    # f_rate = raw.getframerate()
 
     # to Plot the x-axis in seconds
     # you need get the frame rate
@@ -89,27 +90,27 @@ def write_peaks(fn, show_chart=False):
     with open('out.json', 'w', encoding='utf-8') as f:
         f.write(s)
 
-    # using matplotlib to plot
-    # creates a new figure
-    plt.figure(1)
+    if args.show_chart:
 
-    # title of the plot
-    plt.title("Sound Wave")
+        # using matplotlib to plot
+        # creates a new figure
+        plt.figure(1)
 
-    # label of x-axis
-    plt.xlabel("Time")
+        # title of the plot
+        plt.title("Sound Wave")
 
-    # actual plotting
-    plt.plot(time, signal)
-    plt.show()
+        # label of x-axis
+        plt.xlabel("Time")
+
+        # actual plotting
+        plt.plot(time, signal)
+        plt.show()
 
 
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument("-f", "--file", action="store", dest="filename", default=None)
-    parser.add_argument("-o", "--outfile", action="store", dest="outfile", default=None)
-    args = parser.parse_args()
-
-
-    write_peaks(args.filename)
+    # parser.add_argument("-o", "--outfile", action="store", dest="outfile", default=None)
+    parser.add_argument("-v", "--visualize", action="count", dest="show_chart", default=0)
+    write_peaks(parser.parse_args())
