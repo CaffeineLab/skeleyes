@@ -2,6 +2,7 @@
 Convert a song into a simple json peak map for our raspberry pi to flicker eyes on plastic skeletons.  It's not going to be a perfect frequency map as the goal is to flicker the eyes by adjusting the brightness without turning them off.  The Raspbery Pi will be controlling a handful of 12v 'Eagle Eye LEDs'.  
 
 # Simple JSON Map
+For simplicity, just output the (time, brightness) to a JSON file.    In this example we are controlling the brightness at the 1/10th of a second intervals which is ... fast for a long song
 ```
 {
   "0": 0,
