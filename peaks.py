@@ -1,23 +1,27 @@
-# Read the wav file and generate the eye flicker pattern.  Kind of kludgey but works
-# well enough for a first pass at this.
+# Read the wav file and generate the eye flicker pattern.
+# Kind of kludgey but works well enough to generate required files.
 from pathlib import Path
 import argparse
 import json
+import sys
 import wave
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 matplotlib.use('TkAgg')
+SIGNAL_THRESHOLD = 25
+APP_PATH = Path(__file__).parent.resolve()
 
 
 def intervalize(time, signal, interval=0.1):
+    """Generate the two series, one for the interval start time,
+     and another for the signal strength for that interval."""
 
-    points = len(time)
+    t = 1
     base = 0
-
+    points = len(time)
     time_new = [0]
     signal_new = [0]
-    t = 1
 
     while t <= points:
         signals = []
@@ -41,12 +45,12 @@ def intervalize(time, signal, interval=0.1):
 
 
 def dedupe(time, signal):
-    """Don't send new instructions to the pi if we don't have to,
-    just leave the light on at the specified brightness."""
+    """Don't bother changing intensity of LEDs if we don't have to,
+    just leave the lights on at the specified brightness for the period."""
     time_new = []
     signal_new = []
     for t in range(1, len(time)):
-        if signal[t] > 25:
+        if signal[t] > SIGNAL_THRESHOLD:
             time_new.append(time[t])
             signal_new.append(signal[t])
     return time_new, signal_new
@@ -56,8 +60,8 @@ def write_peaks(args):
     """Open a .wav audio file, determine the waveform, and write a file
     that supplies time and brightness level for the LEDs of the display."""
 
-    fn = args.filename
-    raw = wave.open(fn)
+    fn = Path(args.filename)
+    raw = wave.open(str(fn.absolute()))
 
     # -1 indicates all or max frames
     signal = raw.readframes(-1)
@@ -83,11 +87,16 @@ def write_peaks(args):
         num=len(signal)
     )
 
+    # Get rid of timestamps that don't change intensity of lights
+    # Also sets the minium intensity.
     time, signal = dedupe(time.tolist(), signal.tolist())
+
+    # Convert timeseries to intervals
     time, signal = intervalize(time, signal)
 
     s = json.dumps(dict(zip(time, signal)))
-    with open('out.json', 'w', encoding='utf-8') as f:
+
+    with open(args.filename.parent / fn.name.replace('.wav', '.json'), 'w', encoding='utf-8') as f:
         f.write(s)
 
     if args.show_chart:
@@ -110,7 +119,18 @@ def write_peaks(args):
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("-f", "--file", action="store", dest="filename", default=None)
-    # parser.add_argument("-o", "--outfile", action="store", dest="outfile", default=None)
-    parser.add_argument("-v", "--visualize", action="count", dest="show_chart", default=0)
-    write_peaks(parser.parse_args())
+
+    parser.add_argument("filename",
+                        help="relative path to .WAV file")
+
+    parser.add_argument("-v",
+                        "--visualize",
+                        action="count",
+                        dest="show_chart",
+                        default=0)
+
+    pargs = parser.parse_args()
+    pargs.filename = APP_PATH / pargs.filename
+    if pargs.filename.exists() is False:
+        sys.exit('Input file not found')
+    write_peaks(pargs)
