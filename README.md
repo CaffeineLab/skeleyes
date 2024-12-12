@@ -9,7 +9,9 @@ This is just meant for fun halloween props at the house.  It has no real purpose
 
 I mean, you can see that in it's first outing it did an adequate job... stay tuned for 2025 update!
 
-[dance-party-2023.mov](dance-party-2023.mov)
+
+[![First Outing](https://raw.githubusercontent.com/caffeinelab/skeleyes/main/assets/thumbnail.jpg)](https://raw.githubusercontent.com/caffeinelab/skeleyes/main/assets/dance-party-2023.mov)
+
 
 # Simple JSON Map
 For simplicity, just output the (time, brightness) to a JSON file.    In this example we are controlling the brightness at the 1/10th of a second intervals which is ... fast for a long song
