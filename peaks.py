@@ -1,5 +1,5 @@
-# Read the wav file and generate the eye flicker pattern.
-# Kind of kludgey but works well enough to generate required files.
+"""Read the wav file and generate the eye flicker pattern.
+Kind of kludgey but works well enough to generate required files."""
 from pathlib import Path
 import argparse
 import json
