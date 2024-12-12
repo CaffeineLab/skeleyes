@@ -1,7 +1,7 @@
 ![dance-crew.jpg](dance-crew.jpg)
 
 # SKELEYES
-This is just a simple hobbyist script that helped synchronize the strobe lights and the skeleton led eyes in our yearly Halloween display.  This particular year we went for a disco dance theme :)
+This is just a simple hobbyist script that helped synchronize the strobe lights and the skeleton led eyes in our yearly Halloween display.  This particular year we went for a disco dance theme, hence the chart represents 'Stayin Alive' by the Bee Jees :)
 
 Convert a song into a simple json peak map for our raspberry pi to flicker eyes on plastic skeletons.  It's not going to be a perfect frequency map as the goal is to flicker the eyes by adjusting the brightness without turning them off.  The Raspbery Pi will be controlling a handful of 12v 'Eagle Eye LEDs'.  
 
@@ -33,5 +33,5 @@ For simplicity, just output the (time, brightness) to a JSON file.    In this ex
   "1.9": 86,
 ```
 
-# Example 'Flicker Map'
+# Example Flicker Map for 'Stayin Alive' by the Bee Jees!
 ![alt text](https://github.com/CaffeineLab/skeleyes/blob/main/stayin-alive.png?raw=true)
