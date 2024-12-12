@@ -10,7 +10,7 @@ This is just meant for fun halloween props at the house.  It has no real purpose
 I mean, you can see that in it's first outing it did an adequate job... stay tuned for 2025 update!
 
 
-[![First Outing](https://raw.githubusercontent.com/caffeinelab/skeleyes/main/assets/thumbnail.jpg)](https://raw.githubusercontent.com/caffeinelab/skeleyes/main/assets/dance-party-2023.mov)
+![First Outing](https://raw.githubusercontent.com/caffeinelab/skeleyes/main/dance-party-2023.mov)
 
 
 # Simple JSON Map
